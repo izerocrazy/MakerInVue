@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <script src="https://unpkg.com/vue@next"></script>
+    <style>
+      .demo {
+        font-family: sans-serif;
+        user-select: none;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+
+  <div id="main" class="demo">
+    <story-item v-for="event in eventList" v-bind:story="event"></story-item>
+    <button v-on:click="onButton">点击下一个消息</button>
+  </div>
+
+  <script>
+    var clickCount = 0;
+    var texts = [{data:"我是一只浮游"}, {data:"早上我看到了日出，那时候阳光温暖，露珠就在我眼前"}, {data:"只是一个恍惚，露珠消散了……"},{data:"太阳还未下山，可我似乎也就只能看到模糊的光了"},];
+
+    const HelloVueApp = {
+      data() {
+        return {
+          eventList: [],
+        };
+      },
+
+      methods: {
+        onButton() {
+          if (clickCount < texts.length) {
+            this.eventList[clickCount] = texts[clickCount];
+            clickCount++;
+          }
+        },
+      },
+    };
+
+    const app = Vue.createApp(HelloVueApp);
+
+    app.component("story-item", {
+      props: ["story"],
+      template: `<li>{{ story.data }}</li>`,
+    });
+
+    app.mount("#main");
+  </script>
+</html>
