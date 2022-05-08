@@ -1,0 +1,13 @@
+﻿-- 载入 Log
+require "LuaFile/Core/Utility/Log"
+Log.Info ("载入 Lua 成功")
+
+-- 载入 pureMVC
+require "LuaFile/Core/pureMVC/src/init"
+Log.Info ("载入 PureMVC 成功")
+
+-- 载入 Lua 中的 Resource
+require "LuaFile/Core/ResourcesManager/ResourcesManager"
+
+-- 主动调用 Test 代码
+require "LuaFile/Core/ResourcesManager/Test/Test"

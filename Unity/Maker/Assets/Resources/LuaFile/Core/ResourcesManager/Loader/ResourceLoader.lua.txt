@@ -1,0 +1,50 @@
+local IResourceLoader = require ("LuaFile/Core/ResourcesManager/Loader/IResourceLoader")
+
+local ResourceLoader = class(IResourceLoader)
+
+function ResourceLoader:ctor ()
+    self.Cache = {}
+    self.Type = IResourceLoader.eLoaderType.ResourceLoader;
+end
+
+function ResourceLoader:IsCache (szPath)
+    Log.Info ("ResourceLoader IsCache:" .. szPath)
+    Log.Asset (szPath ~= nil)
+
+    local bRet = false;
+
+    bRet = self.Cache[szPath] ~= nil;
+
+    return bRet
+end
+
+function ResourceLoader:Load (szPath)
+    Log.Info ("ResourceLoader Load File:" .. szPath)
+    Log.Asset (szPath ~= nil)
+    local ret = nil
+
+    -- 如果 Resource 在 Cache 之中，就直接返回
+    if self.Cache[szPath] ~= nil then
+        ret = self.Cache[szPath]
+    else
+    -- 没有就是 Resource 加载后，再存入 Cache
+        ret = CS.UnityEngine.Resources.Load (szPath)
+        if ret ~= nil then
+            self.Cache[szPath] = ret
+        else
+            Log.Info ("[warm] Load a Empty File, szPath is ".. szPath)
+        end
+    end
+
+    return ret
+end
+
+function ResourceLoader:GetType ()
+    return self.Type
+end
+
+function ResourceLoader:ClearCache ()
+    self.Cache = {}
+end
+
+return ResourceLoader

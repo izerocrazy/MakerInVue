@@ -1,0 +1,28 @@
+local IResourceLoader = require ("LuaFile/Core/ResourcesManager/Loader/IResourceLoader")
+
+local ABResourceLoader = class (IResourceLoader)
+
+function ABResourceLoader:ctor ()
+    self.Cache = {}
+    self.Type = IResourceLoader.eLoaderType.ABResourceLoader
+end
+
+function ABResourceLoader:Load ()
+    Log.Asset (szPath ~= nil)
+    local ret = nil
+
+    -- 如果 Resource 在 Cache 之中，就直接返回
+    if self.Cache[szPath] ~= nil then
+        ret = self.Cache[szPath]
+    else
+    -- 没有就是 ABResource 加载后，再存入 Cache
+        local obj = CS.UnityEngine.Resources.Load (szPath)
+        self.Cache[szPath] = obj
+    end
+end
+
+function ABResourceLoader:GetType ()
+    return self.Type
+end
+
+return ABResourceLoader

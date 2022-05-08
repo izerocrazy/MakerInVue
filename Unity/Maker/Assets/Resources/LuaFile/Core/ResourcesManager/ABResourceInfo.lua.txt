@@ -1,0 +1,12 @@
+﻿--[[
+ABResourceInfo:
+]]
+local ResourceInfo = require 'LuaFile/Core/ResourcesManager/ResourceInfo'
+local ABResourceInfo = class(ResourceInfo)
+
+function ABResourceInfo:ctor ()
+	self.Type = self.eResourceTye.ABResource
+	self.UsedCount = 0
+end
+
+return ABResourceInfo

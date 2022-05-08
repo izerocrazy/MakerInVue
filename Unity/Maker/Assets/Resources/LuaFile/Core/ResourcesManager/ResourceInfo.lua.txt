@@ -1,0 +1,17 @@
+﻿--[[
+ResourceInfo:
+]]
+local ResourceInfo = class('ResourceInfo')
+
+ResourceInfo.eResourceType = {
+	Resource = 1,
+	ABResource = 2,
+	NetABResource = 3,
+}
+
+function ResourceInfo:ctor ()
+	self.Type = self.eResourceType.Resource
+	self.Address = ""
+end
+
+return ResourceInfo

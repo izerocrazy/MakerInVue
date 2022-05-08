@@ -1,0 +1,46 @@
+﻿--[[
+为了保证资源的全面可覆盖性，整个 ResourceManager 应用的启动流程如下：
+0. 最先启动本地Resource中的 ResourceLib 脚本，用它来载入并启动本地Resource中的 LocalABLib 脚本，进而载入和启动好本地（Resource + AB中）最新的 NetABLib 脚本
+1. NetABLib 对象，确认是否有需要更新的内容，如果有就进行更新
+2. NetABLib 确认AB之中的资源最新之后，如果AB中有更新的需要，重新载入（Resource + AB）中的 ResourceLib、LocalABLib 和 NetABLib 的脚本
+3. 载入（Resource + AB）最新的 ResourceManager，前面重载到最新的 Lib 插入 ResourceManager 之中
+
+ResourceManager 资源管理器：
+1. 可以认为是 Resource + AB 的集合
+2. 在定义上，会认为它负责的是资源的管理，主要是针对两个问题：
+	1. 多资源仓的设计
+		1. 优先搜索的多资源路径需求
+			1. 参考 Lua 载入路径有多个，资源可以放在多个路径下面，并且按照某种顺序进行遍历搜索
+			2. 这种设计，是为了应对 App / Game 这种多项目共同开发环境的需求，这不是一个好的设计，但是快速并且干净
+		2. 真实多文件的资源仓需求：Resource 资源仓和 AB 资源仓
+			1. 相同的接口设计（包括同步异步）
+			2. 插入 ResourceManager 的方式
+		3. 文件缓存机制需求：已传入的 Path 作为 Key，文件被缓存
+		4. 设计
+			1. 单独资源仓
+	2. 资源仓的版本管理：主要是针对 AB 包的版本管理
+	3. 资源在资源仓之中的迁移：也就是如何从 Resource 到 ABResource 之中
+		1. 打包
+		2. 同步：从 Resource 打包到服务器上的 ABResource，再同步到本地的 ABResource 之中
+			1. 制作热更包
+			2. 本地同步并且载入
+		3. 即时同步：请求具体某一个文件的时候，再进行同步处理
+			1. 小包设计，AB 小包（或者抛弃掉AB的概念，如何实现自己的小包？）
+]]
+
+local ResourceInfo = require 'LuaFile/Core/ResourcesManager/ResourceInfo'
+local ABResourceInfo = require 'LuaFile/Core/ResourcesManager/ABResourceInfo'
+local ResourcesManager = class ('ResourcesManager')
+
+function ResourcesManager:ctor ()
+	-- Cache 的初始化
+	self.Cache = {}
+
+	-- 
+end
+
+function ResourcesManager:LoadFile (szPath)
+	-- var file = CS.UnityEng
+end
+
+return ResourcesManager

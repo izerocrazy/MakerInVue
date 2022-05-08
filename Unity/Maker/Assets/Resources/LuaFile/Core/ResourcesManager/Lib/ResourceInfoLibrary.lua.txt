@@ -1,0 +1,35 @@
+﻿local IResourceInfoLibrary = require ("LuaFile/Core/ResourcesManager/Lib/IResourceInfoLibrary")
+local ResourceLoader = require "LuaFile/Core/ResourcesManager/Loader/ResourceLoader"
+local ResourceInfoLibrary = class(IResourceInfoLibrary)
+
+function ResourceInfoLibrary:ctor ()
+    self.InfoFileAddress = ""
+    self.ResourceLoader = ResourceLoader.new()
+end
+
+-- 传入一个文件夹的名称，并且以 '/' 结尾
+function ResourceInfoLibrary:Init (szFileAddress)
+    Log.Asset(szFileAddress ~= nil)
+    Log.Info (string.sub (szFileAddress, string.len(szFileAddress)))
+    Log.Asset (string.sub(szFileAddress, string.len(szFileAddress)) == '/')
+
+    self.InfoFileAddress = szFileAddress
+    self:loadFromFile (szFileAddress)
+end
+
+function ResourceInfoLibrary:loadFromFile (szFilePath)
+end
+
+function ResourceInfoLibrary:GetResourcePath (szName)
+    Log.Asset (szName ~= nil)
+    return self.InfoFileAddress..szName
+end
+
+function ResourceInfoLibrary:IsInclude (szName)
+    Log.Asset (szName ~= nil)
+    local szFilePath = self:GetResourcePath (szName)
+
+    return self.ResourceLoader:Load (szFilePath) ~= nil
+end
+
+return ResourceInfoLibrary

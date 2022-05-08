@@ -1,0 +1,23 @@
+--[[
+
+]]
+local IResourceLoader = class("IResourceLoader")
+
+IResourceLoader.eLoaderType = {
+    ResourceLoader = 1,
+    ABResourceLoader = 2,
+}
+
+function IResourceLoader:ctor ()
+
+end
+
+function IResourceLoader:Load(szPath)
+    Log.Asset(0, "You Should override this interface")
+end
+
+function IResourceLoader:GetType ()
+    Log.Asset (0, "You should override this interface")
+end
+
+return IResourceLoader

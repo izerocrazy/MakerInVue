@@ -1,0 +1,23 @@
+local IResourceInfoLibrary = class ("IResourceInfoLibrary")
+
+function IResourceInfoLibrary:ctor ()
+
+end
+
+function IResourceInfoLibrary:Init (szFileAddress)
+    Log.Asset (0, "You should override this interface")
+end
+
+function IResourceInfoLibrary:loadFromFile (szFilePath)
+    Log.Asset (0, "You should override this interface")
+end
+
+function IResourceInfoLibrary:GetResourcePath (szName)
+    Log.Asset (0, "You should override this interface")
+end
+
+function IResourceInfoLibrary:IsInclude (szName)
+    Log.Asset (0, "You should override this interface")
+end
+
+return IResourceInfoLibrary

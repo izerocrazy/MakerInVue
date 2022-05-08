@@ -1,0 +1,23 @@
+-- package.path = package.path .. ';LuaFile/Core/pureMVC/src/'
+
+pm = pm or {}
+pm.VERSION = '1.0.0'
+pm.FRAMEWORK_NAME = 'puremvc lua'
+pm.PACKAGE_NAME = 'org.puremvc.lua.multicore'
+pm.PACKAGE_PATH = 'LuaFile/Core/pureMVC/src/org/puremvc/lua/multicore'
+
+require(pm.PACKAGE_PATH .. '/help/oop')
+
+pm.Facade = import(pm.PACKAGE_PATH .. '/patterns/facade/Facade')
+pm.Mediator = import(pm.PACKAGE_PATH .. '/patterns/mediator/Mediator')
+pm.Proxy = import(pm.PACKAGE_PATH .. '/patterns/proxy/Proxy')
+pm.SimpleCommand = import(pm.PACKAGE_PATH .. '/patterns/command/SimpleCommand')
+pm.MacroCommand = import(pm.PACKAGE_PATH .. '/patterns/command/MacroCommand')
+pm.Notifier = import(pm.PACKAGE_PATH .. '/patterns/observer/Notifier')
+pm.Notification = import(pm.PACKAGE_PATH .. '/patterns/observer/Notification')
+Log.Info("")
+Log.Info("# FRAMEWORK_NAME           = " .. pm.FRAMEWORK_NAME)
+Log.Info("# VERSION                  = " .. pm.VERSION)
+Log.Info("")
+
+return pm

@@ -1,0 +1,152 @@
+﻿Log = {}
+
+local this = Log
+
+--是否输出网络消息
+this.logNet = true
+
+this.LogLevels = {
+  DEBUG = 1,
+  INFO = 2,
+  WARN = 3,
+  ERROR = 4
+}
+
+this.currentLogLevel = this.LogLevels.DEBUG --只要大于或等于该等级的Log才打印.
+
+if this.currentLogLevel == this.LogLevels.DEBUG and false then
+    local goParentObj = CS.UnityEngine.GameObject.Find('EmbedConsole(Clone)')
+	if goParentObj == nil then
+		this.EmbedConsole = CS.LuaCommon.NewGameObject(CS.CommonTool.LoadResource('Prefab/UI/EmbedConsole/EmbedConsole', LoadBundleType.gameobject));
+		CS.LuaCommon.DontDestroyOnLoad(this.EmbedConsole);
+	end
+end
+
+function this.LogColor(a,b,...)
+  if type(b)== type({})then
+    b=rapidjson.encode(b);
+	Log.Trace("输入的b是个table");
+  end
+  if type(a)== type({})then
+    a=rapidjson.encode(a);
+	Log.Trace("输入的a是个table");
+  end
+  Log.Trace("<color=#ffff00>需要打印的是</color>",a,b,...);
+end
+
+function this.Asset (asset, ...)
+	this.Assert(asset, ...)
+end
+
+function this.Assert(assert, ...)
+  if assert == false then
+		this.Error(... or "Assert Fail")
+	end
+end
+
+function this.Debug(...)
+  if this.LogLevels.DEBUG >= this.currentLogLevel then
+    local msg =  table.concat({...}, "\t")
+	this.LogMsgWithParam("D", msg)
+  end
+end
+
+function this.DebugColor(color, ...)
+    if this.LogLevels.DEBUG >= this.currentLogLevel then
+        local msg =  table.concat({...}, "\t")
+        msg = "<color=#" .. color .. ">" .. msg .. "</color>"
+        this.LogMsgWithParam("D", msg)
+    end
+end
+
+function this.Info(...)
+  if this.LogLevels.INFO >= this.currentLogLevel then
+    local msg =  table.concat({...}, "\t")
+	this.LogMsgWithParam("I", msg)
+  end
+end
+this.Trace = this.Info
+
+function this.Warning(...)
+  if this.LogLevels.WARN >= this.currentLogLevel then
+    local msg =  table.concat({...}, "\t")
+	this.LogMsgWithParam("W", msg)
+  end
+end
+
+function this.Error(...)
+  if this.LogLevels.ERROR >= this.currentLogLevel then
+    local msg =  table.concat({...}, "\t")
+	this.LogMsgWithParam("E", msg)
+  end
+end
+
+this.LogConfig = {
+	--Log Func; Log Header String; Is Show Stack Info
+	["I"] = {CS.Log.Info, '[LUA]:[I]:', false},
+	["D"] = {CS.Log.Info, '[LUA]:[D]:', true},
+	["W"] = {CS.Log.Warning, '[LUA]:[W]:', false},
+	["E"] = {CS.Log.Error, '[LUA]:[E]:', true}
+}
+
+if CS.UnityEngine.Application.platform ~= CS.UnityEngine.RuntimePlatform.IPhonePlayer
+	and CS.UnityEngine.Application.platform ~= CS.UnityEngine.RuntimePlatform.Android then
+	this.LogConfig["I"][3] = true
+	this.LogConfig["W"][3] = true
+end
+
+function this.LogMsgWithParam (szConfigIndexName, msg)
+	local param = this.LogConfig[szConfigIndexName];
+	local func = param[1]
+	local szHeader = param[2]
+	local bShowStack = param[3]
+
+	if bShowStack == true then
+		func(szHeader.. this.GetStackMsg(msg));
+	else
+		func(szHeader..msg)
+	end
+end
+
+function this.GetStackMsg(str)
+    local startLevel = 3
+    local maxLevel = 20
+ 
+    local logString = str..'\n'
+    for level = startLevel, maxLevel do
+        -- 打印堆栈每一层
+        local info = debug.getinfo( level, "nSl") 
+        if info == nil then break end
+        logString = logString..string.format("at %s %s[line:%d]\n", info.source or "", info.name or "", info.currentline )
+    end
+    return logString 
+end
+
+function this.GetAllLogs()
+    return CS.Main.Instance:GetLogModule():GetAllLogsFileName();
+end
+
+--上传当天的日志
+function this.UploadCurrentLog()
+	-- return CS.Elephant.Library.Log.UploadCurrentLog(tostring(UserData.LoginData_SC.uid));
+	return CS.LogFTPServerHelper.UploadCurrentLog(tostring(UserData.LoginData_SC.uid));
+end
+
+function this.UploadLog(logFileName)
+  -- return CS.Elephant.Library.Log.UploadLog(tostring(UserData.LoginData_SC.uid), logFileName)
+  return CS.LogFTPServerHelper.UploadLog(tostring(UserData.LoginData_SC.uid), logFileName)
+end
+
+function this.OpenLog(logLevel, persistDays, autoFlush, maxWriteCount)
+  this.currentLogLevel = logLevel
+  local ok, msg = pcall(function ()
+      CS.Elephant.Library.Log.Init(persistDays, autoFlush, maxWriteCount) --捕获多次初始化导致的异常, 避免游戏运行不下去
+  end)
+  if ok then
+    print("OpenLog log")
+  end
+end
+
+-- this.OpenLog(this.LogLevels.DEBUG, 30, true, 20)
+
+return Log

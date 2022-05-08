@@ -1,0 +1,89 @@
+﻿-- Info
+local ResourceInfo = require ("LuaFile/Core/ResourcesManager/ResourceInfo")
+local ABResourceInfo = require ("LuaFile/Core/ResourcesManager/ABResourceInfo")
+
+-- Loader
+local IResourceLoader = require("LuaFile/Core/ResourcesManager/Loader/IResourceLoader")
+local ResourceLoader = require("LuaFile/Core/ResourcesManager/Loader/ResourceLoader")
+local ABResourceLoader = require("LuaFile/Core/ResourcesManager/Loader/ABResourceLoader")
+
+-- Library
+local ResourceInfoLibrary = require ("LuaFile/Core/ResourcesManager/Lib/ResourceInfoLibrary")
+
+local ResourceLibrary = class ("ResourceLibrary")
+
+function ResourceLibrary:ctor ()
+    self.ResourceFolderAddress = ""
+    self.Cache = {}
+    self.ResourceInfoLibrary = nil
+    self.Loader = nil
+    self.ResourceType = nil
+end
+
+function ResourceLibrary:Init (szFolderPath, ResourceType, Loader)
+    Log.Asset (szFolderPath ~= nil)
+    Log.Asset (ResourceType ~= nil)
+
+    -- 根据 ResourceType，生成对应的 ResourceInfoLibrary 和 ResourceLoader
+    if ResourceType == ResourceInfo.eResourceType.Resource then
+        self.ResourceInfoLibrary = ResourceInfoLibrary.new ()
+        self.Loader = Loader or ResourceLoader.new ()
+    elseif ResourceType == ResourceInfo.eResourceType.ABResource then
+        Log.Asset (0, "please create ABResourceInfoLibrary")
+        self.Loader = ABResourceLoader.new ()
+    elseif ResourceType == ResourceInfo.eResourceType.NetABResource then
+        Log.Asset (0, "please create NetABResourceInfoLibrary")
+        self.Loader = ABResourceLoader.new ()
+    end
+
+    self.ResourceType = ResourceType
+    self.ResourceFolderAddress = szFolderPath
+    -- 初始化 ResourceInfoLibrary
+    self.ResourceInfoLibrary:Init (self.ResourceFolderAddress)
+end
+
+function ResourceLibrary:IsCache (szName)
+    local bRet = false
+    Log.Asset (szName ~= nil)
+
+    bRet = self.Cache[szName] ~= nil
+
+    return bRet
+end
+
+function ResourceLibrary:IsInclude (szName)
+    local bRet = false
+    Log.Asset (szName ~= nil)
+    Log.Asset (self.ResourceInfoLibrary)
+
+    bRet = self.ResourceInfoLibrary:IsInclude(szName)
+
+    return bRet
+end
+
+function ResourceLibrary:Load (szName)
+    local ret = nil
+    Log.Asset (szName ~= nil)
+
+    if self:IsCache (szName) then
+        return self.Cache[szName]
+    end
+
+    local szFilePath = self.ResourceInfoLibrary:GetResourcePath (szName)
+    Log.Asset (szFilePath ~= nil)
+    ret = self.Loader:Load (szFilePath)
+
+    if ret ~= nil then
+        self.Cache [szName] = ret
+    else
+        Log.Warning("ResourceLibrary Load A Empty File:"..szName)
+    end
+
+    return ret
+end
+
+function ResourceLibrary:ClearCache ()
+    self.Cache = {}
+end
+
+return ResourceLibrary

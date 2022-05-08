@@ -1,0 +1,76 @@
+﻿Log.Info ("Test For Resource")
+
+-- Resource 资源加载测试
+-- 1. Txt 资源加载
+-- 2. Image 资源加载
+-- 3. GO 资源加载
+-- 4. 缓存
+local ResourceLoader = require "LuaFile/Core/ResourcesManager/Loader/ResourceLoader"
+local testResourceLoader = ResourceLoader.new ()
+
+function TestCache ()
+    Log.Info ("Test Cache Start")
+
+    local szTestFilePath = "LuaFile/Core/ResourcesManager/Test/TestRes/txt"
+    local bCache = testResourceLoader:IsCache (szTestFilePath)
+    Log.Asset (bCache == false, "Test Fail, There is No Cache For" .. szTestFilePath)
+
+    local testData = testResourceLoader:Load (szTestFilePath)
+    Log.Asset (testData ~= nil, "Load Txt Res Fail")
+
+    bCache = testResourceLoader:IsCache (szTestFilePath)
+    Log.Asset (bCache, "Test Fail, There should be Cache For" .. szTestFilePath)
+    Log.Info ("Pass For TestCache")
+end
+TestCache ()
+
+function TestLoadTxt ()
+    Log.Info ("TestLoadTxt Start")
+
+    local szTestFilePath = "LuaFile/Core/ResourcesManager/Test/TestRes/txt"
+    local testData = testResourceLoader:Load (szTestFilePath)
+    Log.Asset (testData ~= nil, "Load Txt Res Fail")
+    Log.Info (testData.text)
+    Log.Asset (string.find(testData.text, "Test") == 1)
+
+    Log.Info ("Pass For TestLoadTxt")
+end
+TestLoadTxt ()
+
+local ResourceInfoLibrary = require ("LuaFile/Core/ResourcesManager/Lib/ResourceInfoLibrary")
+function TestInfoLibrary ()
+    Log.Info ("TestInfoLibrary Start")
+
+    local szResourceFolder = "LuaFile/Core/ResourcesManager/"
+    local testInfoLibrary = ResourceInfoLibrary.new ()
+    testInfoLibrary:Init (szResourceFolder)
+
+    Log.Asset (testInfoLibrary:IsInclude ("Test/Test.lua"))
+    Log.Asset (testInfoLibrary:IsInclude ("Test/Test_Noexist.lua") == false)
+
+    Log.Info ("Pass For TestInfoLibrary")
+end
+TestInfoLibrary ()
+
+local ResourceInfo = require ("LuaFile/Core/ResourcesManager/ResourceInfo")
+local ResourceLibrary = require ("LuaFile/Core/ResourcesManager/Lib/ResourceLibrary")
+function TestLibrary ()
+    Log.Info ("TestLibrary Start")
+
+    local szResourceFolder = "LuaFile/Core/ResourcesManager/"
+    local testLibrary = ResourceLibrary.new ()
+    testLibrary:Init (szResourceFolder, ResourceInfo.eResourceType.Resource)
+
+    Log.Asset (testLibrary:IsInclude ("Test/Test.lua"))
+    Log.Asset (testLibrary:IsInclude ("Test/Test_Noexist.lua") == false)
+
+    local testData = testLibrary:Load ("Test/TestRes/txt")
+    Log.Asset (testData ~= nil, "Load Txt Res Fail")
+    Log.Info (testData.text)
+    Log.Asset (string.find(testData.text, "Test") == 1)
+
+    Log.Info ("Pass For TestLibrary")
+end
+TestLibrary()
+
+Log.Info ("Pass: Test For Resource")

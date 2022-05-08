@@ -1,0 +1,13 @@
+print ("Hello World From Lua File")
+
+-- Test 反射
+CS.Main.Instance:GetModule ("PoolManager"):AddPool("System.Int32");
+print (CS.Main.Instance:GetModule ("PoolManager"):GetObject("System.Int32"))
+
+-- Test Lua Call C# Function
+CS.Main.Instance.CurrentScene:TestLuaCall();
+
+-- Test Unity C# Interface
+local text = CS.Utility.Find ("Canvas.Text"):GetComponent("Text");
+CS.Log.Asset (text ~= nil);
+text.text = "Hello World For Lua";
