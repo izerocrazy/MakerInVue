@@ -11,3 +11,16 @@ CS.Main.Instance.CurrentScene:TestLuaCall();
 local text = CS.Utility.Find ("Canvas.Text"):GetComponent("Text");
 CS.Log.Asset (text ~= nil);
 text.text = "Hello World For Lua";
+
+-- Test
+local Facade = pm.Facade
+local Notification = pm.Notification
+
+local FacadeTestCommand = import('LuaFile/Test/FacadeTestCommand')
+local FacadeTestVO = import('LuaFile/Test/FacadeTestVO')
+
+local vo = FacadeTestVO.new(32)
+local note = Notification.new('TestNode', vo)
+local testCommand = FacadeTestCommand.new()
+testCommand:execute(note)
+Log.Info("vo.resulte == 64?:", vo.result)
