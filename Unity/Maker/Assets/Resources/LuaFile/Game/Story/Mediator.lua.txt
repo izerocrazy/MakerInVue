@@ -1,0 +1,45 @@
+local StoryMediator = class('StoryMediator', pm.Mediator)
+
+function StoryMediator:ctor(...)
+	StoryMediator.super.ctor(self,...)
+
+    self.proxy = nil;
+
+    local btn = CS.Utility.Find("UICanvas.Button"):GetComponent("Button");
+    Log.Assert (btn ~= nil);
+
+    btn.onClick:AddListener(function()
+        self:showNext();
+    end)
+end
+
+function StoryMediator:uninit()
+    self.proxy = nil;
+    local btn = CS.Utility.Find("UICanvas.Button"):GetComponent("Button");
+    Log.Assert (btn ~= nil);
+
+    btn.onClick:RemoveAllListeners();
+end
+
+--[[
+function StoryMediator:listNotificationInterests()
+	return {'StoryMediator'}
+end
+
+function StoryMediator:handleNotification(notification)
+    Log.Info('StoryMediator handleNotification:', notification.name)
+    if notification.name == 'StoryMediator' then
+	    self.executed = 1
+    end
+end
+]]
+
+function StoryMediator:showNext()
+    local data = self.proxy:getNext();
+
+    local text = CS.Utility.Find ("UICanvas.Text"):GetComponent("Text");
+    Log.Assert (text ~= nil);
+    text.text = data;
+end
+
+return StoryMediator

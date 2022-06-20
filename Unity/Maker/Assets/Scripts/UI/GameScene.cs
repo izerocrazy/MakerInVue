@@ -14,6 +14,7 @@ public class GameScene: BaseScene
 		LuaMachine m = Main.Instance.GetModule("LuaMachine") as LuaMachine;
 
 		m.DoFile("LuaFile/Game/main");
+		m.DoString("MainInit()");
 	}
 
 	// Update is called once per frame
@@ -21,4 +22,10 @@ public class GameScene: BaseScene
 	{
 		base.Update();
 	}
+
+    private void OnDestroy()
+    {
+		LuaMachine m = Main.Instance.GetModule("LuaMachine") as LuaMachine;
+		m.DoString("MainUninit()");
+    }
 }

@@ -1,0 +1,2 @@
+local mediator = FacadeInstance:retrieveMediator("Story")
+mediator:uninit()

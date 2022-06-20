@@ -1,0 +1,13 @@
+local StoryVO = import('LuaFile/Game/Story/StoryVO');
+local StoryProxy = import('LuaFile/Game/Story/Proxy');
+local StoryMediator = import('LuaFile/Game/Story/Mediator');
+
+-- 注册 proxy
+local szProxyName = 'Story'
+FacadeInstance:registerProxy(StoryProxy.new(szProxyName, StoryVO.new()))
+local proxy = FacadeInstance:retrieveProxy(szProxyName)
+
+-- 注册 mediator
+local mediator = StoryMediator.new("Story")
+FacadeInstance:registerMediator(mediator)
+mediator.proxy = proxy;

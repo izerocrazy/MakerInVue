@@ -1,0 +1,16 @@
+local StoryVO = class ('StoryVO')
+
+function StoryVO:ctor(input)
+    self.textsTable = {};
+    self.textsTable[1] = "我是一只浮游";
+    self.textsTable[2] = "早上我看到了日出，那时候阳光温暖，露珠就在我眼前"
+    self.textsTable[3] = "只是一个恍惚，露珠消散了……"
+    self.textsTable[4] = "太阳还未下山，可我似乎也就只能看到模糊的光了"
+end
+
+function StoryVO:getNext(currentIndex)
+    local ret = self.textsTable[currentIndex + 1];
+    return ret;
+end
+
+return StoryVO

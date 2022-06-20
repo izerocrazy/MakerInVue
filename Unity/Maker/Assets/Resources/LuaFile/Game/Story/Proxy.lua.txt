@@ -1,0 +1,15 @@
+local StoryProxy = class('StoryProxy', pm.Proxy)
+
+function StoryProxy:ctor(...)
+	StoryProxy.super.ctor(self,...)
+    self.currentIndex = 1;
+end
+
+function StoryProxy:getNext()
+    local data = self:getData();
+    local ret = data:getNext(self.currentIndex);
+    self.currentIndex = self.currentIndex + 1;
+    return ret;
+end
+
+return StoryProxy
