@@ -15,7 +15,9 @@ text.text = "Hello World For Lua";
 -- Test
 local Facade = pm.Facade
 local Notification = pm.Notification
+local Proxy = pm.Proxy
 
+-- Test Notification can work with Simple CMD
 local FacadeTestCommand = import('LuaFile/Test/FacadeTestCommand')
 local FacadeTestVO = import('LuaFile/Test/FacadeTestVO')
 
@@ -24,3 +26,47 @@ local note = Notification.new('TestNode', vo)
 local testCommand = FacadeTestCommand.new()
 testCommand:execute(note)
 Log.Info("vo.resulte == 64?:", vo.result)
+
+-- Test Facade Core
+local szCoreName = 'TestFacade';
+local facade = Facade.getInstance(szCoreName);
+Log.Assert(Facade.hasCore(szCoreName), 'Facade Core Check Fail, Miss core:'..szCoreName);
+Facade.removeCore(szCoreName);
+Log.Assert(Facade.hasCore(szCoreName) == false, 'Facade Core Check Fail, still has core:'..szCoreName);
+
+facade = Facade.getInstance(szCoreName)
+
+-- Test Facade use Notification to Call CMD
+facade:registerCommand('FacadeTestNote', FacadeTestCommand)
+local vo= FacadeTestVO.new(32)
+facade:sendNotification('FacadeTestNote', vo)
+Log.Info("vo.result == 64?:", vo.result)
+
+local FacadeTestMediator = import('LuaFile/Test/FacadeTestMediator');
+local mediator = FacadeTestMediator.new("Test")
+facade:registerMediator(mediator)
+facade:sendNotification('FacadeTestMediator')
+Log.Info("mediator.executed == true:", mediator.executed)
+
+-- Test Facade use Proxy
+local szProxyName = 'ProxyTestName'
+facade:registerProxy(Proxy.new(szProxyName, {'red', 'green', 'blue'}))
+
+local proxy = facade:retrieveProxy(szProxyName)
+local data = proxy:getData()
+Log.Assert(data[2] == 'green', 'Facade proxy data is error:'..data[2])
+data[2] = 'green2'
+
+local proxyTemp = facade:retrieveProxy(szProxyName)
+Log.Assert(proxy == proxyTemp, 'Facade proxyTemp & proxy should be same')
+
+local proxy2 = facade:removeProxy(szProxyName)
+Log.Assert(proxy2:getProxyName() == szProxyName, 'Facade proxy2 Name is error:'.. proxy2:getData()[2])
+Log.Assert(proxy2:getData()[2] == 'green2', 'Facade proxy2 data is error:'.. proxy2:getData()[2])
+
+local proxy3 = facade:retrieveProxy(szProxyName)
+Log.Assert(proxy3 == null, 'Facade proxy3 data is error, should be null')
+
+Facade:removeCore('TestFacade')
+
+

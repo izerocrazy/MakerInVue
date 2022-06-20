@@ -1,0 +1,19 @@
+local FacadeTestMediator = class('FacadeTestMediator', pm.Mediator)
+
+function FacadeTestMediator:ctor(...)
+	FacadeTestMediator.super.ctor(self,...)
+	self.executed = 0
+end
+
+function FacadeTestMediator:listNotificationInterests()
+	return {'FacadeTestMediator'}
+end
+
+function FacadeTestMediator:handleNotification(notification)
+    Log.Info('FacadeTestMediator handleNotification:', notification.name)
+    if notification.name == 'FacadeTestMediator' then
+	    self.executed = 1
+    end
+end
+
+return FacadeTestMediator

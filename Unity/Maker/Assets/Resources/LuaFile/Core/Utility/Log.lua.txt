@@ -34,10 +34,6 @@ function this.LogColor(a,b,...)
   Log.Trace("<color=#ffff00>需要打印的是</color>",a,b,...);
 end
 
-function this.Asset (asset, ...)
-	this.Assert(asset, ...)
-end
-
 function this.Assert(assert, ...)
   if assert == false then
 		this.Error(... or "Assert Fail")
