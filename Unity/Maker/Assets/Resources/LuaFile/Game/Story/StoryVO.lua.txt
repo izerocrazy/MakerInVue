@@ -10,6 +10,7 @@ end
 
 function StoryVO:getNext(currentIndex)
     local ret = self.textsTable[currentIndex + 1];
+    Log.Assert(ret ~= nil, 'StoryVO Fail, get Empty Data');
     return ret;
 end
 

@@ -8,15 +8,26 @@ local Notification = pm.Notification
 local Proxy = pm.Proxy
 local szCoreName = 'FacadeInstance';
 
+local moduleConfigTable = {
+    ["Story"]= "LuaFile/Game/Story"
+};
+
+local moduleTable = {};
+
 function MainInit ()
     FacadeInstance = Facade.getInstance(szCoreName);
 
     -- 模块载入
-    import('LuaFile/Game/Story/init');
+    for key, value in pairs(moduleConfigTable) do
+        local moduleClass = import(value .. '/init');
+        moduleTable[key] = moduleClass.new();
+    end
 end
 
 function MainUninit()
-    import('LuaFile/Game/Story/uninit');
+    for key, value in pairs(moduleTable) do
+        moduleTable[key]:uninit();
+    end
 
     Facade:removeCore(szCoreName)
 end

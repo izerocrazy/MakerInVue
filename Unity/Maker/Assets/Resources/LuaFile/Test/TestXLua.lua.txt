@@ -65,7 +65,7 @@ Log.Assert(proxy2:getProxyName() == szProxyName, 'Facade proxy2 Name is error:'.
 Log.Assert(proxy2:getData()[2] == 'green2', 'Facade proxy2 data is error:'.. proxy2:getData()[2])
 
 local proxy3 = facade:retrieveProxy(szProxyName)
-Log.Assert(proxy3 == null, 'Facade proxy3 data is error, should be null')
+Log.Assert(proxy3 == nil, 'Facade proxy3 data is error, should be null')
 
 Facade:removeCore('TestFacade')
 

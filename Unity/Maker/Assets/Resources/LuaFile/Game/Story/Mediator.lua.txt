@@ -10,6 +10,10 @@ function StoryMediator:ctor(...)
 
     btn.onClick:AddListener(function()
         self:showNext();
+
+        if self.proxy:isEnd() then
+            btn.interactable = false;
+        end
     end)
 end
 

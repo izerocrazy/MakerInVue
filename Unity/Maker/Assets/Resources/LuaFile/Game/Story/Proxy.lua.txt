@@ -12,4 +12,9 @@ function StoryProxy:getNext()
     return ret;
 end
 
+function StoryProxy:isEnd()
+    ret = #(self:getData().textsTable) <= self.currentIndex;
+    return ret;
+end
+
 return StoryProxy
