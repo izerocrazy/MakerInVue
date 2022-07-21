@@ -1,0 +1,9 @@
+local EditorModule = class ('EditorModule')
+
+function EditorModule:ctor ()
+end
+
+function EditorModule:uninit()
+end
+
+return EditorModule;

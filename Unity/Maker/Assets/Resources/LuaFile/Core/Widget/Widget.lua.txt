@@ -1,0 +1,84 @@
+local Widget = class ('Widget')
+
+function Widget:ctor(parent, position, size)
+    this.name = 'Widget'
+
+    this.components = [];
+
+    -- 还是保留父子关系吧，估计很常用
+    this.parent = parent;
+    this.children = [];
+end
+
+-- Component
+function Widget: isContainComponent (comp)
+    Log.Assert(comp ~= nil, "Widget isContainComponent fail, add empty Component");
+
+    local index = this:getComponentIndex(comp);
+    return index ~= nil;
+end
+
+function Widget: getComponentIndex (comp)
+    for key, var in ipairs(this.components) do
+        if var == comp then
+            return key;
+        end
+    end
+
+    return nil;
+end
+
+function Widget: addComponent (comp)
+    Log.Assert(comp ~= nil, "Widget addComponent fail, add empty Component");
+
+    local index = this:getComponentIndex(comp);
+    Log.Assert(index == nil, "Widget addComponent fail, already has Component");
+
+    table.insert(this.components, comp);
+end
+
+function Widget: removeComponent (comp)
+    Log.Assert(comp ~= nil, "Widget removeComponent fail, remove empty Component");
+
+    local index = this:getComponentIndex(comp);
+    Log.Assert(index ~= nil, "Widget removeComponent fail, cant find Component");
+
+    table.remove(this.components, index);
+end
+
+-- child & parent
+function Widget: isContainChild (child)
+    local index = this:getChildIndex(child);
+
+    return index ~= nil;
+end
+
+function Widget: getChildIndex (child)
+    Log.Assert(child ~= nil, "Widget getChildIndex fail, child is empty");
+
+    for key, var in ipairs(this.children) do
+        if var == child then
+            return key;
+        end
+    end
+
+    return nil;
+end
+
+function Widget: addChild (child)
+    Log.Assert(child ~= nil, "Widget addChild fail, child is empty");
+
+    local index = this:getChildIndex(child);
+    Log.Assert(index == nil, "Widget addChild fail, already has child");
+
+    table.insert(this.children, child);
+end
+
+function Widget: removeChild (child)
+    Log.Assert(child ~= nil, "Widget removeChild fail, remove empty Child");
+
+    local index = this:getChildIndex(comp);
+    Log.Assert(index ~= nil, "Widget removeChild fail, cant find Child");
+
+    table.remove(this.children, index);
+end

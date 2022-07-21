@@ -1,0 +1,9 @@
+local UIComponent = class ('UIComponent')
+
+function UIComponent:ctor(parent, position, size)
+    this.name = 'UIComponent'
+
+    this.position = position or {x: 0, y: 0};
+    this.size = size or {width: 100, height: 100};
+end
+

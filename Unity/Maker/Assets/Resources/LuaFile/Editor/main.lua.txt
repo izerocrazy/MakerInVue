@@ -1,0 +1,33 @@
+print ("Hello World From Lua File")
+
+-- Test Lua Call C# Function
+-- CS.Main.Instance.CurrentScene:TestLuaCall();
+
+local Facade = pm.Facade
+local Notification = pm.Notification
+local Proxy = pm.Proxy
+local szCoreName = 'FacadeInstance';
+
+local moduleConfigTable = {
+    ["UIEditor"]= "LuaFile/Editor/UIEditor"
+};
+
+local moduleTable = {};
+
+function MainInit ()
+    FacadeInstance = Facade.getInstance(szCoreName);
+
+    -- 模块载入
+    for key, value in pairs(moduleConfigTable) do
+        local moduleClass = import(value .. '/init');
+        moduleTable[key] = moduleClass.new();
+    end
+end
+
+function MainUninit()
+    for key, value in pairs(moduleTable) do
+        moduleTable[key]:uninit();
+    end
+
+    Facade:removeCore(szCoreName)
+end
