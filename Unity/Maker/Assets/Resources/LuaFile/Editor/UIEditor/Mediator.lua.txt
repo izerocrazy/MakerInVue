@@ -1,0 +1,25 @@
+local UIEditorMediator = class('UIEditorMediator', pm.Mediator)
+
+function UIEditorMediator:ctor(...)
+	UIEditorMediator.super.ctor(self,...)
+
+    self.proxy = nil;
+
+    local btn = CS.Utility.Find("UICanvas.Button"):GetComponent("Button");
+    Log.Assert (btn ~= nil);
+
+    btn.onClick:AddListener(function()
+        Log.Info ('From UIEditorMediator')
+        self.proxy:CreateOne()
+    end)
+end
+
+function UIEditorMediator:uninit()
+    self.proxy = nil;
+    local btn = CS.Utility.Find("UICanvas.Button"):GetComponent("Button");
+    if btn ~= nil then
+        btn.onClick:RemoveAllListeners();
+    end
+end
+
+return UIEditorMediator

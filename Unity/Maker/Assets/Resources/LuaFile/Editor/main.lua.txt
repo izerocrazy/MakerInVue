@@ -1,4 +1,4 @@
-print ("Hello World From Lua File")
+print ("Hello World From UIEditor Lua File")
 
 -- Test Lua Call C# Function
 -- CS.Main.Instance.CurrentScene:TestLuaCall();

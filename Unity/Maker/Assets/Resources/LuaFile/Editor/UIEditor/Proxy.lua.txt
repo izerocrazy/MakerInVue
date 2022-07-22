@@ -1,0 +1,12 @@
+local UIEditorProxy = class('UIEditorProxy', pm.Proxy)
+
+function UIEditorProxy:ctor(...)
+	UIEditorProxy.super.ctor(self,...)
+end
+
+function UIEditorProxy:CreateOne()
+    Log.Info ('From UIEditorProxy')
+end
+
+
+return UIEditorProxy

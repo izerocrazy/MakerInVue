@@ -1,9 +1,23 @@
+local UIEditorMediator = import('LuaFile/Editor/UIEditor/Mediator');
+local UIEditorProxy = import('LuaFile/Editor/UIEditor/Proxy');
+
 local EditorModule = class ('EditorModule')
 
 function EditorModule:ctor ()
+	-- 注册 proxy
+	local szProxyName = 'UIEditor'
+	FacadeInstance:registerProxy(UIEditorProxy.new(szProxyName))
+	local proxy = FacadeInstance:retrieveProxy(szProxyName)
+
+	-- 注册 mediator
+	local mediator = UIEditorMediator.new("UIEditor")
+	FacadeInstance:registerMediator(mediator)
+	mediator.proxy = proxy;
 end
 
 function EditorModule:uninit()
+	local mediator = FacadeInstance:retrieveMediator("UIEditor")
+	mediator:uninit()
 end
 
 return EditorModule;
